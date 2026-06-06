@@ -1,7 +1,5 @@
 <div align="center">
 
-<br/>
-
 ```
 ██╗   ██╗███████╗███╗   ██╗██████╗  ██████╗ ██████╗  █████╗
 ██║   ██║██╔════╝████╗  ██║██╔══██╗██╔═══██╗██╔══██╗██╔══██╗
@@ -11,161 +9,102 @@
   ╚═══╝  ╚══════╝╚═╝  ╚═══╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
 ```
 
-### **Procurement, Commanded.**
-
+**Procurement, Commanded.**
 *Where every purchase decision lives — tracked, negotiated, approved, and documented.*
 
-<br/>
+[![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Python](https://img.shields.io/badge/Python_3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org/)
 
-![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
-![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Python](https://img.shields.io/badge/Python_3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](CONTRIBUTING.md)
+[![Made for India](https://img.shields.io/badge/Made_for-Indian_SMEs-FF9933?style=for-the-badge&logo=india&logoColor=white)]()
 
-<br/>
-
-**[🚀 Live Demo](#quick-start) • [📖 Backend API Docs](#api-overview) • [🎬 Watch Demo Video](#demo)**
-
-<br/>
-
----
+[🚀 Live Demo](#) • [📖 Backend API Docs](#) • [🎬 Watch Demo Video](#)
 
 </div>
 
-<br/>
+---
 
 ## ⚡ The Problem VENDORA Solves
 
-> *In Indian SMEs, procurement runs on WhatsApp groups, Excel sheets, and phone calls. Decisions worth lakhs are made in DMs. There is no audit trail. No accountability. No intelligence.*
+In Indian SMEs, procurement runs on WhatsApp groups, Excel sheets, and phone calls. Decisions worth lakhs are made in DMs. There is no audit trail. No accountability. No intelligence.
 
-<br/>
-
-<table>
-<tr>
-<td width="50%">
-
-### ❌ How It Works Today
-
-- Vendors contacted on **WhatsApp** — no record
-- Quotes compared on **Excel** — no intelligence
-- Approvals via **phone calls** — no audit trail
-- Invoices sent via **email attachments** — no tracking
-- Finance team has **zero visibility** until it's too late
-- Post-order negotiations happen **outside the system**
-
-</td>
-<td width="50%">
-
-### ✅ How VENDORA Changes It
-
-- Vendors invited via **structured RFQs** — trackable
-- Quotes compared on a **Bloomberg-style table** — intelligent
-- Approvals via **hold-to-confirm mechanic** — accountable
-- Invoices generated as **GST-compliant PDFs** — professional
-- Finance team has **real-time visibility** at every step
-- All negotiations **locked after PO** — no renegotiation
-
-</td>
-</tr>
-</table>
-
-<br/>
+| ❌ How It Works Today | ✅ How VENDORA Changes It |
+|---|---|
+| Vendors contacted on WhatsApp — no record | Vendors invited via structured RFQs — trackable |
+| Quotes compared on Excel — no intelligence | Quotes compared on a Bloomberg-style table — intelligent |
+| Approvals via phone calls — no audit trail | Approvals via hold-to-confirm mechanic — accountable |
+| Invoices sent via email attachments — no tracking | Invoices generated as GST-compliant PDFs — professional |
+| Finance team has zero visibility until it's too late | Finance team has real-time visibility at every step |
+| Post-order negotiations happen outside the system | All negotiations locked after PO — no renegotiation |
 
 ---
 
 ## 🎬 Demo
 
-<div align="center">
+Login as any role. Watch the entire procurement cycle — from RFQ to Invoice — happen in one platform.
 
-> **Login as any role. Watch the entire procurement cycle — from RFQ to Invoice — happen in one platform.**
+> [!NOTE]
+> **All demo accounts use password:** `demo123`
 
 | 🔐 Role | 📧 Email | 🔑 Password |
 |---|---|---|
-| Procurement Officer | `officer@vendora.com` | `demo123` |
-| Vendor | `vendor@vendora.com` | `demo123` |
-| Manager / Approver | `manager@vendora.com` | `demo123` |
-| Admin | `admin@vendora.com` | `demo123` |
-
-</div>
-
-<br/>
+| Procurement Officer | officer@vendora.com | demo123 |
+| Vendor | vendor@vendora.com | demo123 |
+| Manager / Approver | manager@vendora.com | demo123 |
+| Admin | admin@vendora.com | demo123 |
 
 ---
 
 ## 🏗️ System Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         VENDORA PLATFORM                         │
-│                                                                   │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │                    REACT FRONTEND                         │   │
-│  │   Login  →  RFQ  →  Compare  →  Approve  →  PO  →  INV  │   │
-│  │                   (Vite + TypeScript + Tailwind)          │   │
-│  └────────────────────────┬─────────────────────────────────┘   │
-│                           │  REST API calls                       │
-│  ┌────────────────────────▼─────────────────────────────────┐   │
-│  │                   FASTAPI BACKEND                         │   │
-│  │  /auth  /rfqs  /quotations  /approvals  /invoices         │   │
-│  │  /purchase-orders  /threads  /analytics  /notifications   │   │
-│  │  Business Logic  │  PDF Generation  │  Email (Resend)     │   │
-│  └────────────────────────┬─────────────────────────────────┘   │
-│                           │                                       │
-│  ┌────────────────────────▼─────────────────────────────────┐   │
-│  │                     SUPABASE                              │   │
-│  │   PostgreSQL DB  │  Realtime  │  Auth  │  Storage         │   │
-│  │   16 tables  │  RLS Policies  │  PDF/File buckets         │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                   │
-└─────────────────────────────────────────────────────────────────┘
-```
+```mermaid
+flowchart TD
+    FE["🖥️ React Frontend\nVite + TypeScript + Tailwind\nLogin → RFQ → Compare → Approve → PO → Invoice"]
+    BE["⚙️ FastAPI Backend\n/auth /rfqs /quotations /approvals\n/purchase-orders /threads /analytics\nPDF Generation · Email via Resend"]
+    SB["🗄️ Supabase\nPostgreSQL · 16 Tables · RLS Policies\nRealtime · Auth · Storage Buckets"]
 
-<br/>
+    FE -->|REST API calls| BE
+    BE -->|DB reads/writes| SB
+    FE -->|Realtime subscriptions direct| SB
+
+    style FE fill:#1e3a5f,stroke:#61DAFB,color:#ffffff
+    style BE fill:#0d3b2e,stroke:#009688,color:#ffffff
+    style SB fill:#1a3a2a,stroke:#3ECF8E,color:#ffffff
+```
 
 ---
 
 ## 🔄 The Complete Procurement Journey
 
-```
-OFFICER                    VENDOR                    MANAGER
-   │                          │                          │
-   ├── Creates RFQ ──────────►│                          │
-   │   (items, deadline,      │ Gets email invite        │
-   │    vendor selection)     │                          │
-   │                          │                          │
-   │                          ├── Submits Quote          │
-   │◄─ Quote Notification ────┤   (price, delivery,      │
-   │                          │    confidence mood)      │
-   │                          │                          │
-   ├── Compares Quotes        │                          │
-   │   (Bloomberg table)      │                          │
-   │   (Decision sliders)     │                          │
-   │                          │                          │
-   ├── Selects Vendor ────────────────────────────────►  │
-   │                          │                    Approval card
-   │                          │                    "Why not cheapest?"
-   │                          │                    Read thread
-   │                          │                    HOLD TO APPROVE ▼
-   │                          │                          │
-   │◄─────────────────────────────────── PO Auto-Created ┤
-   │                          │◄── Thread LOCKED ────────┤
-   │                          │
-   ├── Invoice Generated
-   │   (GST-compliant PDF)
-   │
-   ├── Email to Vendor ──────►│
-   │
-  DONE ✓
-```
+```mermaid
+sequenceDiagram
+    actor O as 🧑 Officer
+    actor V as 🏭 Vendor
+    actor M as ✅ Manager
 
-<br/>
+    O->>V: Creates RFQ (items, deadline, vendor selection)
+    Note over V: Gets email invite
+    V->>O: Submits Quote (price, delivery, confidence mood)
+    O->>O: Compares Quotes (Bloomberg table + Decision sliders)
+    O->>M: Selects Vendor → Approval Request
+    Note over M: Reviews "Why not cheapest?"<br/>Reads negotiation thread
+    M->>O: HOLD TO APPROVE ✓ → PO Auto-Created
+    M->>V: Thread LOCKED 🔒
+    O->>O: Invoice Generated (GST-compliant PDF)
+    O->>V: Email Invoice ✉️
+    Note over O,V: DONE ✓
+```
 
 ---
-```
-##Folder Structure
 
+## 📁 Folder Structure
+
+```
 vendora/
 ├── vendora-frontend/                        # React + Vite + TypeScript + Tailwind CSS
 │   ├── package.json
@@ -360,8 +299,10 @@ vendora/
         ├── test_approval.py
         ├── test_invoice.py
         └── test_analytics.py
-
 ```
+
+---
+
 ## 🚀 Features
 
 ### 🔐 Role-Based Access — 4 Distinct Worlds
@@ -373,7 +314,7 @@ PROCUREMENT OFFICER         VENDOR                MANAGER             ADMIN
 ─────────────────────       ──────────────        ────────────        ─────────
 • Create & send RFQs        • See invitations     • Approval queue    • Health score
 • Compare quotes            • Submit quotes       • Hold-to-approve   • User management
-• Generate POs & Invoices   • Negotiate           • Read threads       • Vendor registry
+• Generate POs & Invoices   • Negotiate           • Read threads      • Vendor registry
 • Live activity feed        • Track outcomes      • Analytics charts  • Audit log
 ```
 
@@ -381,7 +322,8 @@ PROCUREMENT OFFICER         VENDOR                MANAGER             ADMIN
 
 ### 📊 Bloomberg-Style Quotation Comparison
 
-The standout feature for procurement intelligence. Every vendor side-by-side, every metric compared.
+> [!TIP]
+> **The standout feature.** Drag any weight slider and composite scores recalculate live with rolling number animation. The recommended column shifts dynamically.
 
 ```
                     MEHTA IND.     SHARMA TRADERS    GLOBAL SUPPLIES
@@ -402,14 +344,15 @@ COMPOSITE SCORE     74 / 100       61 / 100          89 / 100  ← REC.
 
 ### 💬 Negotiation Thread — Replaces WhatsApp Forever
 
-> *The #1 unprofessional behavior in Indian SME procurement is WhatsApp. VENDORA eliminates it.*
+> [!IMPORTANT]
+> **The #1 unprofessional behavior in Indian SME procurement is WhatsApp. VENDORA eliminates it.**
 
-- **Linear/Notion-style** messages — not WhatsApp bubbles
-- **System messages** auto-appear on key events: *"Quote revised to ₹97,000 · Oct 12"*
-- **Thread locks automatically** after PO is issued — no post-approval renegotiation
-- **Every message timestamped** and audit-logged
-- **Manager can read** the full thread before approving — full context, zero surprises
-- **Export as PDF** — one click, full conversation for compliance teams
+- Linear/Notion-style messages — not WhatsApp bubbles
+- System messages auto-appear on key events: `"Quote revised to ₹97,000 · Oct 12"`
+- Thread **locks automatically** after PO is issued — no post-approval renegotiation
+- Every message timestamped and audit-logged
+- Manager can read the full thread before approving — full context, zero surprises
+- Export as PDF — one click, full conversation for compliance teams
 
 ---
 
@@ -456,8 +399,6 @@ Example: Sharma quoted ₹1,12,500. You chose Global at ₹95,000.
 
 ### 🏥 Procurement Health Score — Admin's Control Room
 
-A single number that summarises the health of your entire procurement operation.
-
 ```
          PROCUREMENT HEALTH SCORE
                   87
@@ -485,7 +426,7 @@ LIVE ACTIVITY  ●
 ● 2h    Invoice #INV-089 emailed to Global Supplies
 ```
 
-Powered by **Supabase Realtime** — new events slide in from the top without a single page refresh. Every role sees their relevant stream in real time.
+Powered by Supabase Realtime — new events slide in from the top without a single page refresh.
 
 ---
 
@@ -510,51 +451,26 @@ SGST 9%:                                  ₹8,550
 TOTAL:                                 ₹1,12,100
 ```
 
-Toggle between **CGST+SGST** (intra-state) and **IGST** (inter-state). Download as PDF, print, or email directly to the vendor — all from one screen.
-
-<br/>
+Toggle between CGST+SGST (intra-state) and IGST (inter-state). Download as PDF, print, or email directly to the vendor — all from one screen.
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend
-```
-React 18 + Vite 5 + TypeScript
-├── Tailwind CSS 3          → Utility-first styling
-├── Framer Motion           → Animations & micro-interactions
-├── Recharts                → Analytics charts (manager + admin)
-├── Lucide React            → Icon system
-├── React Hot Toast         → Directional toast notifications
-├── @supabase/supabase-js   → Realtime subscriptions (direct)
-├── jsPDF + html2canvas     → Client-side PDF fallback
-└── date-fns                → Date calculations & formatting
-```
+<div align="center">
 
-### Backend
-```
-FastAPI (Python 3.11+) + Uvicorn
-├── Supabase Python SDK     → All database operations
-├── WeasyPrint + Jinja2     → Server-side PDF generation (PO, Invoice, Thread)
-├── Resend SDK              → Transactional emails
-├── python-jose             → JWT authentication
-├── Pydantic v2             → Request/response validation
-└── Pillow                  → Image processing for PDFs
-```
+| Layer | Technology | Purpose |
+|---|---|---|
+| ![React](https://img.shields.io/badge/-React_18-20232A?style=flat-square&logo=react&logoColor=61DAFB) | React 18 + Vite 5 + TypeScript | Frontend framework |
+| ![Tailwind](https://img.shields.io/badge/-Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white) | Tailwind CSS 3 | Utility-first styling |
+| ![Framer](https://img.shields.io/badge/-Framer_Motion-0055FF?style=flat-square&logo=framer&logoColor=white) | Framer Motion | Animations & micro-interactions |
+| ![Recharts](https://img.shields.io/badge/-Recharts-FF6384?style=flat-square) | Recharts | Analytics charts |
+| ![FastAPI](https://img.shields.io/badge/-FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white) | FastAPI + Python 3.11 | Backend framework |
+| ![Supabase](https://img.shields.io/badge/-Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white) | Supabase | DB + Realtime + Auth + Storage |
+| ![WeasyPrint](https://img.shields.io/badge/-WeasyPrint-4B8BBE?style=flat-square) | WeasyPrint + Jinja2 | Server-side PDF generation |
+| ![Resend](https://img.shields.io/badge/-Resend-000000?style=flat-square) | Resend SDK | Transactional emails |
 
-### Infrastructure
-```
-Supabase
-├── PostgreSQL              → 16 tables, full relational schema
-├── Realtime                → Live subscriptions (messages, activity, notifications)
-├── Auth                    → JWT-based authentication
-└── Storage                 → PDF bucket + attachment bucket
-
-Deployment
-└── Antigravity             → Backend hosting
-```
-
-<br/>
+</div>
 
 ---
 
@@ -579,8 +495,6 @@ notifications     → Per-user notification queue
 saved_addresses   → Company delivery address book
 ```
 
-<br/>
-
 ---
 
 ## 📡 API Overview
@@ -598,75 +512,51 @@ saved_addresses   → Company delivery address book
 /api/vendors/        → Vendor registry, trust scores, performance
 ```
 
-<br/>
-
 ---
 
 ## ⚡ Quick Start
 
-### Prerequisites
-```
-✅ Node.js 18+
-✅ Python 3.11+
-✅ Supabase account (free tier works)
-✅ Resend account for emails (free tier works)
-```
+> [!WARNING]
+> Make sure you have **Node.js 18+**, **Python 3.11+**, a **Supabase** account, and a **Resend** account before proceeding. All free tiers work.
 
-### 1️⃣ Clone the Repository
+**1️⃣ Clone the Repository**
 ```bash
 git clone https://github.com/your-team/vendora.git
 cd vendora
 ```
 
-### 2️⃣ Backend Setup
+**2️⃣ Backend Setup**
 ```bash
 cd vendora-backend
 pip install -r requirements.txt
-
-# Create .env file
-cp .env.example .env
-# Fill in: SUPABASE_URL, SUPABASE_SERVICE_KEY, RESEND_API_KEY
-
-# Run migrations in Supabase dashboard (copy SQL from /db/migrations/)
-# Then seed demo data:
-python seed.py
-
-# Start backend
+cp .env.example .env        # Fill in: SUPABASE_URL, SUPABASE_SERVICE_KEY, RESEND_API_KEY
+python seed.py              # Seeds demo data
 uvicorn main:app --reload --port 8000
 ```
 
-### 3️⃣ Frontend Setup
+**3️⃣ Frontend Setup**
 ```bash
 cd vendora-frontend
 npm install
-
-# Create .env file
-cp .env.example .env
-# Fill in: VITE_API_URL=http://localhost:8000
-#          VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
-
-npm run dev
-# → Opens at http://localhost:5173
+cp .env.example .env        # Fill in: VITE_API_URL, VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
+npm run dev                 # → http://localhost:5173
 ```
 
-### 4️⃣ Login and Explore
+**4️⃣ Login and Explore**
 ```
 http://localhost:5173/login
 
-Demo accounts (all password: demo123):
-  officer@vendora.com   → Full procurement workflow
-  vendor@vendora.com    → Quote submission + negotiations
-  manager@vendora.com   → Approval queue + analytics
-  admin@vendora.com     → Health score + reports
+officer@vendora.com   → Full procurement workflow
+vendor@vendora.com    → Quote submission + negotiations
+manager@vendora.com   → Approval queue + analytics
+admin@vendora.com     → Health score + reports
 ```
-
-<br/>
 
 ---
 
 ## 🗺️ Roadmap
 
-### ✅ Phase 1 — Hackathon Build (Complete)
+**✅ Phase 1 — Hackathon Build (Complete)**
 - [x] Role-based access (4 roles, 4 worlds)
 - [x] Complete RFQ → Quote → Compare → Approve → PO → Invoice flow
 - [x] Bloomberg-style comparison table with weighted decision engine
@@ -678,22 +568,19 @@ Demo accounts (all password: demo123):
 - [x] GST-compliant invoice PDF generation
 - [x] Email invoice via Resend integration
 
-### 🔄 Phase 2 — Post-Hackathon
+**🔄 Phase 2 — Post-Hackathon**
 - [ ] AI Quote Analyser — one-paragraph vendor summary auto-generated
-- [ ] Price Benchmarking — *"Last time you bought this, you paid ₹420/unit"*
+- [ ] Price Benchmarking — "Last time you bought this, you paid ₹420/unit"
 - [ ] Repeat Order — one click to re-issue a past PO
 - [ ] Vendor Blacklist with reason log
-- [ ] Inactivity alerts — nudge officer when RFQ sits in "Comparing" for 3+ days
 - [ ] Budget vs Actual tracker per category
 
-### 💡 Phase 3 — Production Scale
+**💡 Phase 3 — Production Scale**
 - [ ] Mobile-responsive vendor portal
 - [ ] Multi-company / SaaS multi-tenancy
 - [ ] ERP integrations (Tally, Zoho)
-- [ ] WhatsApp Business API — auto-send RFQ notifications to vendors who haven't onboarded
+- [ ] WhatsApp Business API — auto-send RFQ notifications
 - [ ] ML-powered vendor shortlisting
-
-<br/>
 
 ---
 
@@ -701,26 +588,21 @@ Demo accounts (all password: demo123):
 
 | What We Built | Why It's Different |
 |---|---|
-| Bloomberg-style comparison table | No other procurement tool visualizes vendor data this way |
-| Weighted Decision Engine sliders | Score recalculates live — feels intelligent, not static |
-| Hold-to-Approve mechanic | Friction by design — shows we understand real-world risk |
-| Negotiation Thread with audit trail | Directly replaces WhatsApp — a real, documented pain point |
-| System messages in thread | Audit log as a readable story — compliance teams love this |
-| Thread lock after PO | Prevents post-approval renegotiation — a real governance gap |
-| Savings Tracker counting up | Answers *"what's the ROI?"* in under 3 seconds |
-| Procurement Health Score | No other hackathon team will think of this |
-| Live Activity Feed | Supabase Realtime — proof it's a live system, not a mockup |
-| GST-compliant invoices | Actually useful in India — not a generic "invoice" feature |
-
-<br/>
+| ![](https://img.shields.io/badge/-Bloomberg_Table-1a1a2e?style=flat-square) Bloomberg-style comparison table | No other procurement tool visualizes vendor data this way |
+| ![](https://img.shields.io/badge/-Decision_Engine-0d3b2e?style=flat-square) Weighted Decision Engine sliders | Score recalculates live — feels intelligent, not static |
+| ![](https://img.shields.io/badge/-Hold_to_Approve-7b2d00?style=flat-square) Hold-to-Approve mechanic | Friction by design — shows we understand real-world risk |
+| ![](https://img.shields.io/badge/-Audit_Thread-1a237e?style=flat-square) Negotiation Thread with audit trail | Directly replaces WhatsApp — a real, documented pain point |
+| ![](https://img.shields.io/badge/-Thread_Lock-4a0072?style=flat-square) Thread lock after PO | Prevents post-approval renegotiation — a real governance gap |
+| ![](https://img.shields.io/badge/-Savings_Tracker-1b5e20?style=flat-square) Savings Tracker counting up | Answers "what's the ROI?" in under 3 seconds |
+| ![](https://img.shields.io/badge/-Health_Score-b71c1c?style=flat-square) Procurement Health Score | No other hackathon team will think of this |
+| ![](https://img.shields.io/badge/-Live_Feed-e65100?style=flat-square) Live Activity Feed | Supabase Realtime — proof it's a live system, not a mockup |
+| ![](https://img.shields.io/badge/-GST_Invoice-006064?style=flat-square) GST-compliant invoices | Actually useful in India — not a generic "invoice" feature |
 
 ---
 
 <div align="center">
 
----
-
-**VENDORA** — Built for Indian SMEs. Designed for production.
+**VENDORA — Built for Indian SMEs. Designed for production.**
 
 *Procurement, Commanded.*
 
