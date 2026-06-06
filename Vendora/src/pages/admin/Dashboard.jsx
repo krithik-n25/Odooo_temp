@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { Users, Building2, Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Sidebar from '../../components/shared/Sidebar';
+import { useDataService } from '../../lib/supabase';
 
 const mockSystemHealth = [
   { label: 'TOTAL USERS', value: 12 },
@@ -98,6 +99,16 @@ function HealthGauge({ score }) {
 
 export default function AdminDashboard() {
   const { user } = useAuth();
+  const dataService = useDataService();
+  const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      const data = await dataService.getActivities();
+      setActivities(data.slice(0, 5)); // Show latest 5
+    };
+    fetchActivities();
+  }, []);
 
   return (
     <div className="min-h-screen flex bg-vendora-bg">
@@ -259,18 +270,18 @@ export default function AdminDashboard() {
               <h2 className="text-xl font-display">SYSTEM AUDIT</h2>
             </div>
             <div className="space-y-3">
-              {[
-                'PO #1203 approved by Priya Mehta',
-                'RFQ #2847 created by Ramesh Shah',
-                'Vendor: Mehta Industries registered',
-              ].map((activity, i) => (
+              {activities.length > 0 ? activities.map((activity, i) => (
                 <div key={i} className="py-3 border-b border-white/5">
-                  <p className="text-xs text-vendora-text mb-1">{activity}</p>
+                  <p className="text-xs text-vendora-text mb-1">{activity.text || activity.description || 'System event logged'}</p>
                   <span className="text-xs text-vendora-muted">
-                    {['2m ago', '15m ago', '1h ago'][i]}
+                    {activity.timestamp || activity.createdDate || 'Just now'}
                   </span>
                 </div>
-              ))}
+              )) : (
+                <div className="py-8 text-center text-vendora-muted italic">
+                  No system audit logs available.
+                </div>
+              )}
             </div>
             <button className="btn-ghost w-full mt-6">VIEW FULL LOG</button>
           </motion.div>

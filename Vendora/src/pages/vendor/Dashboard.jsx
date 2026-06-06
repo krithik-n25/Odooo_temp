@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Shield, FileText, MessageSquare, Clock, TrendingUp, LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Sidebar from '../../components/shared/Sidebar';
+import { useDataService } from '../../lib/supabase';
+import { useState, useEffect } from 'react';
 
 const mockRFQs = [
   { id: 2847, title: 'Industrial Bearings — 250 units', company: 'ABC Manufacturing Co.', deadline: '3 DAYS LEFT', status: 'open' },
@@ -19,6 +21,18 @@ const mockHistory = [
 export default function VendorDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const dataService = useDataService();
+  const [rfqs, setRfqs] = useState([]);
+
+  useEffect(() => {
+    const fetchRFQs = async () => {
+      const allRfqs = await dataService.getRFQs();
+      // Only show RFQs that are open for quoting
+      const openRfqs = allRfqs.filter(r => r.status === 'RFQ SENT' || r.status === 'QUOTES IN' || r.status === 'COMPARING');
+      setRfqs(openRfqs);
+    };
+    fetchRFQs();
+  }, []);
 
   return (
     <div className="min-h-screen flex bg-vendora-bg">
@@ -49,18 +63,22 @@ export default function VendorDashboard() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-display">OPEN INVITATIONS</h2>
               <span className="badge-vendora bg-vendora-amber text-black">
-                {mockRFQs.filter(r => r.status === 'open').length} ACTIVE
+                {rfqs.filter(r => r.status === 'RFQ SENT' || r.status === 'QUOTES IN').length} ACTIVE
               </span>
             </div>
 
             <div className="space-y-4">
-              {mockRFQs.map((rfq, index) => (
+              {rfqs.length === 0 ? (
+                <div className="text-center py-8 text-vendora-muted italic card-vendora border-dashed border-white/10">
+                  No active RFQ invitations.
+                </div>
+              ) : rfqs.map((rfq, index) => (
                 <motion.div
                   key={rfq.id}
                   className={`
                     card-vendora border-l-4 
-                    ${rfq.status === 'open' ? 'border-vendora-amber' : 
-                      rfq.status === 'submitted' ? 'border-blue-500' : 'border-vendora-muted'}
+                    ${(rfq.status === 'RFQ SENT' || rfq.status === 'QUOTES IN') ? 'border-vendora-amber' : 
+                      rfq.status === 'COMPARING' ? 'border-blue-500' : 'border-vendora-muted'}
                   `}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -69,22 +87,22 @@ export default function VendorDashboard() {
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-sm font-mono text-vendora-amber">RFQ #{rfq.id}</span>
+                        <span className="text-sm font-mono text-vendora-amber">RFQ #{rfq.displayId || rfq.id}</span>
                         <span className={`
                           badge-vendora text-xs
-                          ${rfq.deadline.includes('DAYS') ? 'bg-vendora-warning/20 text-vendora-warning' : 'bg-blue-500/20 text-blue-400'}
+                          ${rfq.deadline.includes('d') || rfq.deadline.includes('DAYS') ? 'bg-vendora-warning/20 text-vendora-warning' : 'bg-blue-500/20 text-blue-400'}
                         `}>
                           <Clock className="w-3 h-3" />
                           {rfq.deadline}
                         </span>
                       </div>
                       <h3 className="text-lg font-body text-vendora-text mb-1">{rfq.title}</h3>
-                      <p className="text-sm text-vendora-muted">From: {rfq.company}</p>
+                      <p className="text-sm text-vendora-muted">Category: {rfq.category}</p>
                     </div>
                   </div>
                   
                   <div className="flex gap-3">
-                    {rfq.status === 'open' ? (
+                    {(rfq.status === 'RFQ SENT' || rfq.status === 'QUOTES IN') ? (
                       <>
                         <button className="btn-ghost flex-1">VIEW DETAILS</button>
                         <button 

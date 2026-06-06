@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { authenticateUser, getRoleDashboard, HARDCODED_USERS } from '../lib/hardcodedAuth';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { api } from '../lib/api';
 
 const roles = [
   {
@@ -42,6 +43,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -51,17 +53,25 @@ export default function Login() {
     setPassword('demo123');
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoggingIn(true);
     
-    const user = authenticateUser(email, password);
-    
-    if (user) {
-      login(user);
-      toast.success(`Welcome back, ${user.name}!`);
-      navigate(getRoleDashboard(user.role));
-    } else {
-      toast.error('Invalid credentials. Please try again.');
+    try {
+      const response = await api.post('/api/auth/login', { email, password });
+      if (response && response.user && response.token) {
+        const userData = { ...response.user, token: response.token };
+        login(userData);
+        toast.success(`Welcome back, ${response.user.name}!`);
+        navigate(getRoleDashboard(response.user.role));
+      } else {
+        toast.error('Invalid response format from server.');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || 'Invalid credentials. Please try again.');
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -278,9 +288,9 @@ export default function Login() {
               </div>
             </div>
 
-            <button type="submit" className="btn-primary w-full flex items-center justify-center gap-3 group">
-              ENTER VENDORA
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <button type="submit" disabled={isLoggingIn} className="btn-primary w-full flex items-center justify-center gap-3 group disabled:opacity-70">
+              {isLoggingIn ? 'AUTHENTICATING...' : 'ENTER VENDORA'}
+              {!isLoggingIn && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
             </button>
           </motion.form>
 

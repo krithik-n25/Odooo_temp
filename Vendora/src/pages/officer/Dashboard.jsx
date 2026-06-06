@@ -81,6 +81,8 @@ export default function Dashboard() {
     const fetchedInvoices = await dataService.getInvoices();
     const fetchedActivities = await dataService.getActivities();
     
+    console.log("DASHBOARD fetchedRfqs:", fetchedRfqs);
+    
     setRfqs(fetchedRfqs);
     setPos(fetchedPos);
     setInvoices(fetchedInvoices);

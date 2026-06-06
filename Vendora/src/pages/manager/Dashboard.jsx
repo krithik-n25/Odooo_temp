@@ -55,17 +55,23 @@ export default function ManagerDashboard() {
     const rfqs = await dataService.getRFQs();
     const pendingList = rfqs
       .filter((r) => r.status === 'APPROVAL')
-      .map((r) => ({
-        id: r.id,
-        title: r.title,
-        value: r.id === 2856 ? '₹8,23,000' : '₹1,12,100',
-        numericValue: r.id === 2856 ? 823000 : 112100,
-        requestedBy: r.id === 2856 ? 'Priya Verma' : 'Ramesh Shah',
-        vendor: r.id === 2856 ? 'Mehta Industries' : 'Global Supplies',
-        pendingTime: r.id === 2856 ? '1h' : '18h',
-        highValue: r.id === 2856,
-        rawRfq: r
-      }));
+      .map((r) => {
+        // Calculate numeric value from items
+        const val = r.items ? r.items.reduce((sum, item) => sum + ((item.targetPrice || 0) * (item.qty || 0)), 0) : 0;
+        
+        return {
+          id: r.displayId || r.id,
+          rawId: r.id,
+          title: r.title,
+          value: `₹${val.toLocaleString('en-IN')}`,
+          numericValue: val,
+          requestedBy: 'Priya Officer',
+          vendor: 'Preferred Vendor',
+          pendingTime: 'Pending Review',
+          highValue: val > 100000,
+          rawRfq: r
+        };
+      });
     setApprovals(pendingList);
     if (pendingList.length > 0 && !selectedApproval) {
       setSelectedApproval(pendingList[0]);
@@ -116,14 +122,12 @@ export default function ManagerDashboard() {
     setHoldProgress(0);
     toast.success('✓ APPROVED — PO is being generated now');
 
-    // Create PO in mock DB
-    const selectedQuote = selectedApproval.id === 2856 
-      ? { unitPrice: 823, vendorName: 'Mehta Industries' }
-      : { unitPrice: 420, vendorName: 'Global Supplies' };
+    // Create PO
+    const selectedQuote = { unitPrice: selectedApproval.numericValue, vendorName: selectedApproval.vendor };
 
     await dataService.addPO({
       id: `PO-2025-${Math.floor(Math.random() * 9000) + 1000}`,
-      rfqId: selectedApproval.id,
+      rfqId: selectedApproval.rawId || selectedApproval.id,
       vendorName: selectedQuote.vendorName,
       date: new Date().toLocaleDateString('en-IN'),
       status: 'SENT',
@@ -297,13 +301,13 @@ export default function ManagerDashboard() {
                             <div className="flex items-center gap-2 text-vendora-amber">
                               <span className="text-sm">★</span>
                               <span className="text-sm font-mono text-vendora-muted">
-                                {selectedApproval.id === 2856 ? '4.2' : '4.8'} / 5.0
+                                4.8 / 5.0
                               </span>
                             </div>
                           </div>
                           <div className="text-right">
                             <p className="text-2xl font-mono text-vendora-amber font-bold">{selectedApproval.value}</p>
-                            <p className="text-sm text-vendora-muted">9 days delivery</p>
+                            <p className="text-sm text-vendora-muted">Fast delivery</p>
                           </div>
                         </div>
                       </div>
@@ -313,14 +317,7 @@ export default function ManagerDashboard() {
                     <div>
                       <p className="text-xs text-vendora-muted uppercase tracking-widest font-bold mb-3">VS LOWEST QUOTE</p>
                       <div className="bg-vendora-nested rounded-vendora p-4 border border-white/5">
-                        {selectedApproval.id === 2856 ? (
-                          <p className="text-sm text-vendora-success font-body">✦ Lowest quote selected</p>
-                        ) : (
-                          <>
-                            <p className="text-sm text-vendora-muted mb-1 font-body">Sharma Traders: ₹95,000</p>
-                            <p className="text-lg text-vendora-warning font-body font-bold">PRICE PREMIUM: +₹17,100 (+18%)</p>
-                          </>
-                        )}
+                        <p className="text-sm text-vendora-success font-body">✦ Lowest quote selected</p>
                       </div>
                     </div>
 
@@ -329,9 +326,7 @@ export default function ManagerDashboard() {
                       <p className="text-xs text-vendora-muted uppercase tracking-widest font-bold mb-3">OFFICER DECISION RATIONALE</p>
                       <div className="bg-vendora-nested rounded-vendora p-4 border border-white/5">
                         <p className="text-sm text-vendora-text italic font-body leading-relaxed">
-                          {selectedApproval.id === 2856 
-                            ? '"Mehta Industries is our tier 1 raw materials vendor. Excellent track record and ready to dispatch."'
-                            : '"Global Supplies has never missed a deadline. Sharma caused a 2-week factory delay last quarter."'}
+                          "Vendor has an excellent track record and is ready to dispatch."
                         </p>
                       </div>
                     </div>

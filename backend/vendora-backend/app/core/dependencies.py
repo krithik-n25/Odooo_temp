@@ -14,11 +14,12 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserOut:
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=["HS256"], options={"verify_aud": False})
-        user_id: str = payload.get("sub")
-        if user_id is None:
+        user_response = supabase.auth.get_user(token)
+        if not user_response or not user_response.user:
             raise credentials_exception
-    except JWTError:
+        user_id = user_response.user.id
+    except Exception as e:
+        print(f"Auth error: {e}")
         raise credentials_exception
 
     # Fetch user profile from Supabase

@@ -4,6 +4,7 @@ import { Download, Printer, Mail, Check, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/shared/Sidebar';
 import toast from 'react-hot-toast';
+import html2pdf from 'html2pdf.js';
 
 const mockInvoice = {
   number: 'INV-2025-089',
@@ -68,7 +69,25 @@ export default function Invoice() {
   }, [invoiceDate]);
 
   const handleDownloadPDF = () => {
-    toast.success('Downloading Invoice as PDF...');
+    const element = document.getElementById('invoice-document');
+    if (!element) {
+      toast.error('Invoice document not found');
+      return;
+    }
+    
+    toast.success('Generating PDF...');
+    
+    const opt = {
+      margin: 10,
+      filename: `${mockInvoice.number}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    
+    html2pdf().set(opt).from(element).save().then(() => {
+      toast.success('PDF Downloaded Successfully!');
+    });
   };
 
   const handlePrint = () => {
@@ -242,6 +261,7 @@ export default function Invoice() {
         {/* Right Panel - Live Invoice Document */}
         <div className="flex-1 p-8 overflow-y-auto custom-scrollbar bg-vendora-bg">
           <motion.div 
+            id="invoice-document"
             className="max-w-4xl mx-auto bg-white text-black p-12 rounded shadow-2xl"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

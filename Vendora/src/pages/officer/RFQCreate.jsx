@@ -4,6 +4,7 @@ import { Plus, Trash2, Upload, X, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/shared/Sidebar';
 import toast from 'react-hot-toast';
+import { useDataService } from '../../lib/supabase';
 
 const categories = [
   'RAW MATERIALS',
@@ -25,6 +26,7 @@ const mockVendors = [
 
 export default function RFQCreate() {
   const navigate = useNavigate();
+  const dataService = useDataService();
   const [showSuccess, setShowSuccess] = useState(false);
   const [rfqNumber, setRfqNumber] = useState('');
   
@@ -77,7 +79,7 @@ export default function RFQCreate() {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!title || !category || lineItems.length === 0 || selectedVendors.length === 0) {
@@ -85,11 +87,23 @@ export default function RFQCreate() {
       return;
     }
 
-    const generatedRfqNumber = `RFQ-2025-${Math.floor(Math.random() * 9000) + 1000}`;
-    setRfqNumber(generatedRfqNumber);
-    setShowSuccess(true);
-    
-    toast.success('RFQ Created Successfully!');
+    const rfqPayload = {
+      title,
+      category,
+      priority,
+      deadline: deadline,
+      items: lineItems,
+      vendor_ids: selectedVendors
+    };
+
+    try {
+      const savedRfq = await dataService.addRFQ(rfqPayload);
+      setRfqNumber(savedRfq.id || `RFQ-2025-${Math.floor(Math.random() * 9000) + 1000}`);
+      setShowSuccess(true);
+      toast.success('RFQ Created Successfully!');
+    } catch (err) {
+      toast.error('Failed to create RFQ');
+    }
   };
 
   if (showSuccess) {

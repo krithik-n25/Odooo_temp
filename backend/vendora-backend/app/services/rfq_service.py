@@ -33,7 +33,7 @@ def create_rfq(data: RFQCreate, user_id: str):
         "title": data.title,
         "category": data.category,
         "priority": data.priority,
-        "status": "draft",
+        "status": "sent",
         "created_by": user_id,
         "deadline": data.deadline.isoformat(),
         "notes": data.notes
