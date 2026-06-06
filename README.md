@@ -164,6 +164,204 @@ OFFICER                    VENDOR                    MANAGER
 
 ---
 
+##Folder Structure
+
+vendora/
+├── vendora-frontend/                        # React + Vite + TypeScript + Tailwind CSS
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── tsconfig.json
+│   ├── tailwind.config.js
+│   ├── index.html
+│   ├── .env                                 # VITE_API_URL, VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
+│   ├── .env.example
+│   │
+│   └── src/
+│       ├── main.tsx
+│       ├── App.tsx                          # Route tree + role-based guards
+│       │
+│       ├── lib/
+│       │   ├── supabase.ts                  # Supabase realtime client (direct subscriptions only)
+│       │   ├── api.ts                       # ALL FastAPI calls — single source of truth
+│       │   └── hardcodedAuth.ts             # Demo credentials for 4 roles
+│       │
+│       ├── hooks/
+│       │   ├── useAuth.ts                   # → POST /api/auth/login
+│       │   ├── useRealtime.ts               # → Supabase direct subscriptions
+│       │   └── useSavings.ts                # → GET /api/analytics/savings
+│       │
+│       ├── context/
+│       │   ├── AuthContext.tsx
+│       │   └── NotificationContext.tsx
+│       │
+│       ├── types/
+│       │   └── index.ts                     # Message, Thread, RFQ, Vendor, etc.
+│       │
+│       ├── utils/
+│       │   ├── formatCurrency.ts
+│       │   ├── calculateSavings.ts
+│       │   └── generatePDF.ts
+│       │
+│       ├── assets/
+│       │   ├── logo.svg
+│       │   └── fonts/
+│       │
+│       ├── components/
+│       │   ├── shared/
+│       │   │   ├── Sidebar.tsx
+│       │   │   ├── TopBar.tsx
+│       │   │   ├── KPICard.tsx              # Count-up animation on mount
+│       │   │   ├── StatusBadge.tsx          # Pulsing dot variants
+│       │   │   ├── Toast.tsx                # react-hot-toast custom styles
+│       │   │   ├── LiveActivityFeed.tsx     # Supabase realtime, Framer Motion slide-in
+│       │   │   ├── Modal.tsx
+│       │   │   ├── SavingsWidget.tsx        # Compact (dashboard) + full (reports)
+│       │   │   └── NegotiationBadge.tsx     # Unread count on nav rail
+│       │   │
+│       │   ├── officer/
+│       │   │   ├── PipelineKanban.tsx       # RFQ stage columns
+│       │   │   ├── ComparisonTable.tsx      # Bloomberg-style vendor table
+│       │   │   ├── DecisionEngine.tsx       # Weighted sliders + live recalculation
+│       │   │   ├── RFQPreview.tsx           # Live document preview (right panel)
+│       │   │   ├── PODocument.tsx           # Live PO document (right panel)
+│       │   │   ├── InvoiceDocument.tsx      # GST-compliant live invoice
+│       │   │   └── EmailSlideOver.tsx       # Slide-in email composer
+│       │   │
+│       │   ├── vendor/
+│       │   │   ├── RFQCard.tsx              # Border color: amber/blue/green/gray by status
+│       │   │   ├── QuoteSummaryCard.tsx     # Live quote totals as vendor types
+│       │   │   ├── MoodIndicator.tsx        # Confidence level selector
+│       │   │   └── ThreadCard.tsx           # Compact thread with unread badge
+│       │   │
+│       │   ├── manager/
+│       │   │   ├── ApprovalCard.tsx
+│       │   │   ├── HoldToApproveBtn.tsx     # SVG ring fill mechanic (1.5s hold)
+│       │   │   ├── ApprovalChain.tsx        # Officer → Manager → Finance steps
+│       │   │   └── UrgencyBanner.tsx        # "N approvals waiting — oldest Xh"
+│       │   │
+│       │   └── admin/
+│       │       ├── HealthScoreGauge.tsx     # SVG circle, stroke-dashoffset animation
+│       │       ├── SpendingHeatmap.tsx      # 12×5 month/category grid
+│       │       ├── FunnelChart.tsx          # Procurement funnel with drop-off %
+│       │       ├── VendorLeaderboard.tsx    # Top 5 / Bottom 5
+│       │       └── UserTable.tsx            # Role badge + actions
+│       │
+│       └── pages/
+│           ├── Login.tsx                    # Role tile grid + credential auto-fill
+│           │
+│           ├── officer/
+│           │   ├── Dashboard.tsx            # KPI strip, pipeline kanban, live feed
+│           │   ├── RFQCreate.tsx            # Smart form + live document preview
+│           │   ├── QuotationComparison.tsx  # Comparison table + decision engine
+│           │   ├── PurchaseOrder.tsx        # Split screen — controls + PO document
+│           │   ├── Invoice.tsx              # Split screen — controls + invoice document
+│           │   └── Negotiations.tsx         # Thread list + active thread
+│           │
+│           ├── vendor/
+│           │   ├── Dashboard.tsx            # Trust score, open invitations, history
+│           │   ├── QuoteSubmit.tsx          # Per-item pricing + live summary card
+│           │   ├── NegotiationThread.tsx    # Realtime chat, system messages, lock state
+│           │   └── VendorOrders.tsx
+│           │
+│           ├── manager/
+│           │   ├── Dashboard.tsx            # Urgency banner, approval queue, 3 charts
+│           │   └── ApprovalDetail.tsx       # "Why not cheapest?" + hold-to-approve
+│           │
+│           └── admin/
+│               ├── Dashboard.tsx            # Health score gauge, user mgmt, audit log
+│               ├── Reports.tsx              # Savings spotlight, heatmap, funnel
+│               ├── VendorManagement.tsx
+│               └── UserManagement.tsx
+│
+│
+└── vendora-backend/                         # FastAPI · Python 3.11+ · Supabase
+    ├── main.py                              # FastAPI app init, CORS middleware, router mounts
+    ├── requirements.txt
+    ├── .env                                 # SUPABASE_URL, SERVICE_KEY, RESEND_API_KEY, JWT_SECRET
+    ├── .env.example
+    ├── README.md
+    │
+    ├── app/
+    │   │
+    │   ├── core/
+    │   │   ├── __init__.py
+    │   │   ├── config.py                    # Pydantic BaseSettings — all env vars
+    │   │   ├── database.py                  # Supabase client initialization
+    │   │   ├── security.py                  # JWT encode / decode (python-jose)
+    │   │   ├── dependencies.py              # get_current_user(), require_role() — injected via Depends()
+    │   │   └── exceptions.py
+    │   │
+    │   ├── models/                          # Pydantic request/response schemas
+    │   │   ├── __init__.py
+    │   │   ├── user.py
+    │   │   ├── vendor.py
+    │   │   ├── rfq.py
+    │   │   ├── quotation.py
+    │   │   ├── approval.py
+    │   │   ├── purchase_order.py
+    │   │   ├── invoice.py
+    │   │   ├── negotiation.py
+    │   │   ├── analytics.py
+    │   │   └── notification.py
+    │   │
+    │   ├── routers/                         # HTTP layer — validate input, call services, return responses
+    │   │   ├── __init__.py
+    │   │   ├── auth.py                      # POST /api/auth/login|signup|logout  GET /api/auth/me
+    │   │   ├── vendors.py                   # GET|POST /api/vendors  GET /api/vendors/me  PATCH status
+    │   │   ├── rfqs.py                      # GET|POST /api/rfqs  POST send|attachments  GET compare
+    │   │   ├── quotations.py                # GET|PUT /api/quotations/{id}  POST select
+    │   │   ├── approvals.py                 # GET /api/approvals  POST approve|reject
+    │   │   ├── purchase_orders.py           # GET|POST /api/purchase-orders  POST pdf  PATCH status
+    │   │   ├── invoices.py                  # GET|POST /api/invoices  POST pdf|email  PATCH status
+    │   │   ├── negotiations.py              # GET|POST /api/threads  POST messages|lock|export
+    │   │   ├── analytics.py                 # GET officer-kpis|admin-kpis|savings|health-score|funnel
+    │   │   ├── notifications.py             # GET /api/notifications  PATCH read|read-all
+    │   │   └── utility.py                   # GET /api/health  GET|POST saved-addresses  PATCH users
+    │   │
+    │   ├── services/                        # Business logic — all calculations, orchestration, side effects
+    │   │   ├── __init__.py
+    │   │   ├── auth_service.py
+    │   │   ├── vendor_service.py            # recalculate_trust_score()
+    │   │   ├── rfq_service.py               # create_rfq(), assign_vendors()
+    │   │   ├── quotation_service.py         # calculate_composite_scores(), calculate_totals()
+    │   │   ├── approval_service.py          # auto_create_po() — triggers PO + thread lock + notify
+    │   │   ├── po_service.py
+    │   │   ├── invoice_service.py
+    │   │   ├── negotiation_service.py       # lock_thread(), create_system_message()
+    │   │   ├── analytics_service.py         # calculate_health_score(), calculate_savings(), procurement_funnel()
+    │   │   ├── notification_service.py
+    │   │   └── activity_log_service.py
+    │   │
+    │   ├── utils/                           # Stateless utility functions
+    │   │   ├── __init__.py
+    │   │   ├── pdf_generator.py             # WeasyPrint + Jinja2 → PO, Invoice, Thread Export PDFs
+    │   │   ├── email_sender.py              # Resend SDK — RFQ invitations, invoice delivery
+    │   │   ├── number_generator.py          # RFQ-2025-XXXX  PO-2025-XXXX  INV-2025-XXX
+    │   │   ├── tax_calculator.py            # CGST+SGST (intra-state) / IGST (inter-state)
+    │   │   ├── savings_calculator.py        # max(quotes) − PO value per cycle
+    │   │   └── storage.py                   # Supabase Storage upload — PDFs + RFQ attachments
+    │   │
+    │   └── templates/
+    │       ├── pdf/
+    │       │   ├── purchase_order.html      # Jinja2 template → WeasyPrint
+    │       │   ├── invoice.html             # GST-compliant tax invoice layout
+    │       │   └── negotiation_export.html  # Full conversation log for compliance
+    │       │
+    │       └── email/
+    │           ├── rfq_invitation.html      # Sent to each vendor on RFQ dispatch
+    │           ├── invoice_email.html       # Invoice delivery with PDF attachment
+    │           └── approval_notification.html
+    │
+    └── tests/
+        ├── __init__.py
+        ├── test_auth.py
+        ├── test_rfq.py
+        ├── test_quotation.py
+        ├── test_approval.py
+        ├── test_invoice.py
+        └── test_analytics.py
+
+
 ## 🚀 Features
 
 ### 🔐 Role-Based Access — 4 Distinct Worlds
