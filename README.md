@@ -163,7 +163,7 @@ OFFICER                    VENDOR                    MANAGER
 <br/>
 
 ---
-
+```
 ##Folder Structure
 
 vendora/
@@ -361,7 +361,7 @@ vendora/
         ├── test_invoice.py
         └── test_analytics.py
 
-
+```
 ## 🚀 Features
 
 ### 🔐 Role-Based Access — 4 Distinct Worlds
