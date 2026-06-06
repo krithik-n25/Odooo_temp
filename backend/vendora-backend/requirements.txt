@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+supabase
+python-jose[cryptography]
+python-multipart
+pydantic
+pydantic-settings
+pydantic[email]
+weasyprint
+jinja2
+resend
+python-dotenv
+httpx
+pillow
