@@ -1,0 +1,1169 @@
+# VENDORA — Frontend Product Requirements Document
+### Procurement, Commanded.
+**Version 1.0 | React + Vite + TypeScript + Tailwind CSS**
+
+---
+
+## TABLE OF CONTENTS
+
+1. Project Identity
+2. Tech Stack & Dependencies
+3. Application Architecture
+4. Role-Based Access System
+5. Page-by-Page PRD
+   - 5.1 Login Page
+   - 5.2 Procurement Officer — Dashboard
+   - 5.3 Procurement Officer — RFQ Creation
+   - 5.4 Procurement Officer — Quotation Comparison
+   - 5.5 Procurement Officer — Purchase Order
+   - 5.6 Procurement Officer — Invoice Generation
+   - 5.7 Vendor — Dashboard
+   - 5.8 Vendor — Quote Submission
+   - 5.9 Vendor — Negotiation Thread
+   - 5.10 Manager / Approver — Dashboard
+   - 5.11 Manager / Approver — Approval Detail
+   - 5.12 Admin — Dashboard
+   - 5.13 Admin — Reports & Analytics
+   - 5.14 Savings Tracker (Global Feature)
+   - 5.15 Negotiation Thread (Global Feature)
+6. Shared Components
+7. Notification System
+8. Routing Structure
+
+---
+
+## 1. PROJECT IDENTITY
+
+- **Name:** VENDORA
+- **Tagline:** "Procurement, Commanded."
+
+---
+
+## 2. TECH STACK & DEPENDENCIES
+
+```json
+{
+  "dependencies": {
+    "react": "^18.x",
+    "react-dom": "^18.x",
+    "react-router-dom": "^6.x",
+    "lucide-react": "latest",
+    "recharts": "latest",
+    "@supabase/supabase-js": "latest",
+    "framer-motion": "latest",
+    "react-hot-toast": "latest",
+    "date-fns": "latest",
+    "jspdf": "latest",
+    "html2canvas": "latest"
+  },
+  "devDependencies": {
+    "typescript": "^5.x",
+    "vite": "^5.x",
+    "tailwindcss": "^3.x",
+    "@types/react": "latest"
+  }
+}
+```
+
+---
+
+## 3. APPLICATION ARCHITECTURE
+
+### Folder Structure
+```
+src/
+├── assets/
+├── components/
+│   ├── shared/
+│   │   ├── Sidebar.tsx
+│   │   ├── TopBar.tsx
+│   │   ├── KPICard.tsx
+│   │   ├── StatusBadge.tsx
+│   │   ├── Toast.tsx
+│   │   ├── LiveActivityFeed.tsx
+│   │   ├── Modal.tsx
+│   │   └── SavingsWidget.tsx
+│   ├── officer/
+│   ├── vendor/
+│   ├── manager/
+│   └── admin/
+├── pages/
+│   ├── Login.tsx
+│   ├── officer/
+│   │   ├── Dashboard.tsx
+│   │   ├── RFQCreate.tsx
+│   │   ├── QuotationComparison.tsx
+│   │   ├── PurchaseOrder.tsx
+│   │   └── Invoice.tsx
+│   ├── vendor/
+│   │   ├── Dashboard.tsx
+│   │   ├── QuoteSubmit.tsx
+│   │   └── NegotiationThread.tsx
+│   ├── manager/
+│   │   ├── Dashboard.tsx
+│   │   └── ApprovalDetail.tsx
+│   └── admin/
+│       ├── Dashboard.tsx
+│       └── Reports.tsx
+├── hooks/
+│   ├── useAuth.ts
+│   ├── useRealtime.ts
+│   └── useSavings.ts
+├── context/
+│   ├── AuthContext.tsx
+│   └── NotificationContext.tsx
+├── lib/
+│   ├── supabase.ts
+│   └── hardcodedAuth.ts
+├── types/
+│   └── index.ts
+├── utils/
+│   ├── formatCurrency.ts
+│   ├── calculateSavings.ts
+│   └── generatePDF.ts
+├── App.tsx
+└── main.tsx
+```
+
+---
+
+## 4. ROLE-BASED ACCESS SYSTEM
+
+### Hardcoded Credentials (hardcodedAuth.ts)
+```typescript
+export const HARDCODED_USERS = [
+  {
+    id: 'user_officer_01',
+    email: 'officer@vendora.com',
+    password: 'demo123',
+    role: 'officer',
+    name: 'Ramesh Shah',
+    company: 'ABC Manufacturing Co.',
+  },
+  {
+    id: 'user_vendor_01',
+    email: 'vendor@vendora.com',
+    password: 'demo123',
+    role: 'vendor',
+    name: 'Mehta Industries',
+    company: 'Mehta Industries Pvt. Ltd.',
+  },
+  {
+    id: 'user_manager_01',
+    email: 'manager@vendora.com',
+    password: 'demo123',
+    role: 'manager',
+    name: 'Priya Mehta',
+    company: 'ABC Manufacturing Co.',
+  },
+  {
+    id: 'user_admin_01',
+    email: 'admin@vendora.com',
+    password: 'demo123',
+    role: 'admin',
+    name: 'Suresh Admin',
+    company: 'ABC Manufacturing Co.',
+  },
+];
+```
+
+### Role → Dashboard Routing
+```
+/login                   → Login Page
+/officer/dashboard       → Procurement Officer
+/vendor/dashboard        → Vendor
+/manager/dashboard       → Manager / Approver
+/admin/dashboard         → Admin
+```
+
+---
+
+## 5. PAGE-BY-PAGE PRD
+
+---
+
+### 5.1 LOGIN PAGE
+
+#### Layout
+Two-column split — 50/50 on desktop, single column on mobile.
+
+**Left Half — Brand Statement**
+
+Large display text:
+```
+VENDORA.
+PROCUREMENT,
+COMMANDED.
+```
+
+Below the heading, one subline:
+```
+"Where every purchase decision lives."
+```
+
+**Right Half — Login Panel**
+
+**Role Selector (top of panel):**
+
+Four tiles in a 2×2 grid. Each tile shows:
+- Icon (lucide-react)
+- Role name
+- One-line description
+
+```
+┌──────────────────┐  ┌──────────────────┐
+│  [UserCircle]    │  │  [Building2]     │
+│  PROCUREMENT     │  │  VENDOR          │
+│  OFFICER         │  │                  │
+│  Create & track  │  │  Submit quotes & │
+│  all purchases   │  │  track orders    │
+└──────────────────┘  └──────────────────┘
+
+┌──────────────────┐  ┌──────────────────┐
+│  [CheckSquare]   │  │  [Settings]      │
+│  MANAGER /       │  │  ADMIN           │
+│  APPROVER        │  │                  │
+│  Approve or      │  │  Manage system   │
+│  reject orders   │  │  & analytics     │
+└──────────────────┘  └──────────────────┘
+```
+
+On clicking a role tile: credentials auto-fill below.
+
+**Credential Fields:**
+- Email input with auto-fill on role tile click
+- Password input with eye toggle icon
+- Login button: text `ENTER VENDORA →`
+
+**Demo credentials strip (below button):**
+```
+▸ officer@vendora.com  ▸ vendor@vendora.com
+▸ manager@vendora.com  ▸ admin@vendora.com
+  password: demo123
+```
+
+---
+
+### 5.2 PROCUREMENT OFFICER — DASHBOARD
+
+#### Layout: Three-Column (permanent)
+```
+[Icon rail] | [Main canvas] | [Live panel]
+```
+
+**Left Rail — Navigation**
+```
+[VENDORA logo]
+────────────────
+[LayoutDashboard]   Dashboard
+[FileText]          RFQs
+[Building2]         Vendors
+[GitCompare]        Compare
+[ShoppingCart]      Purchase Orders
+[Receipt]           Invoices
+[MessageSquare]     Negotiations
+────────────────
+[Bell]              Notifications (with count badge)
+[User]              Profile
+```
+
+**Center Canvas:**
+
+*KPI Strip (5 tiles, full width, horizontal row):*
+
+```
+[ PENDING APPROVALS ] [ ACTIVE RFQs ] [ POs THIS MONTH ] [ INVOICES PENDING ] [ SAVINGS THIS MONTH ]
+       3                    7             ₹14.2L                 5                  ₹2.3L ↑
+   ⚠ 1 urgent           2 expiring      +12% MoM             ₹8L value           vs last mo
+```
+
+Each tile shows:
+- Label
+- Value (counts up from 0 on page load)
+- Sub-info (urgent count, trend %, etc.)
+- Amber progress underline fills toward monthly target
+
+*Procurement Pipeline (below KPIs):*
+
+Horizontal kanban-style columns:
+```
+RFQ SENT | QUOTES IN | COMPARING | APPROVAL | PO ISSUED | INVOICED
+```
+
+Each card within a column shows:
+- Item name
+- Value in ₹
+- Vendor count + countdown `⏰ 3d 4h left`
+- Deadlines < 24h: pulsing indicator
+- Click any card → detail slide-over opens from right (no page nav)
+
+*Quick Actions (bottom of center canvas):*
+
+Three buttons:
+```
+[+ CREATE NEW RFQ]   [VIEW ALL POs]   [GENERATE INVOICE]
+```
+
+**Right Panel — Live Operations**
+
+```
+LIVE ACTIVITY  ●  (pulsing green dot)
+──────────────────────────────────
+
+● 2m   Mehta Industries submitted quote for RFQ #2847
+● 15m  Manager approved PO #1203 — ₹38,000
+● 1h   New vendor: Sharma Traders registered
+● 2h   Invoice #INV-089 emailed to Global Supplies
+● 3h   RFQ #2851 deadline extended 2 days
+```
+
+- New events slide in from top (Framer Motion `AnimatePresence`)
+- Supabase realtime subscription updates this feed live
+- Scrollable
+- Below feed: **Savings Widget** (see Section 5.14)
+
+---
+
+### 5.3 PROCUREMENT OFFICER — RFQ CREATION
+
+#### Layout: Full Canvas Split
+Left 50% = smart form | Right 50% = live RFQ document preview
+
+**Left Panel — Form:**
+
+*Section 1 — RFQ Identity*
+- Title input with placeholder `WHAT ARE YOU PROCURING?`
+- Category chips (horizontal row, click to select one):
+  `RAW MATERIALS | SERVICES | EQUIPMENT | CONSUMABLES | OTHER`
+- Priority toggle: `STANDARD` / `URGENT`
+  Urgent = red badge appears on this RFQ everywhere in the system
+
+*Section 2 — Line Items (dynamic table)*
+```
+ITEM NAME   │ SPECIFICATION │ QTY │ UNIT  │ TARGET PRICE
+────────────┼───────────────┼─────┼───────┼─────────────
+[input]     │ [input]       │ [0] │ [▼]   │ [optional]
+```
+- `+ ADD ITEM` button: new row appears with slide-down animation
+- Trash icon appears on row hover
+- Running subtotal auto-calculates at bottom
+
+*Section 3 — Deadline Slider*
+- Horizontal slider: Today → 30 days
+- Draggable marker
+- Large type above updates: `DEADLINE: 7 DAYS FROM TODAY — Oct 15, 2025`
+- Warning if < 3 days: `⚠ Short deadline — vendors may not respond.`
+
+*Section 4 — Vendor Selection*
+Grid of vendor cards (from database):
+```
+┌────────────────────┐
+│ Mehta Industries   │
+│ RAW MATERIALS      │
+│ ████░ 4.2★        │
+│ Avg response: 2h   │
+└────────────────────┘
+```
+Click → selected state + checkmark overlay
+Counter: `3 VENDORS SELECTED`
+
+*Section 5 — Attachments*
+Drag-drop zone.
+Dropped files appear as pills: `[filename.pdf ×]`
+
+*Send Button:*
+`SEND RFQ TO VENDORS →` — full width, bottom of form
+
+**Success Moment:**
+Full-screen takeover — then:
+```
+RFQ #2853 SENT TO 3 VENDORS.
+DEADLINE: OCT 15.
+```
+`BACK TO DASHBOARD →` button below.
+
+**Right Panel — Live Preview:**
+Renders as a professional document. Updates as left panel is typed into.
+Document sections: letterhead → RFQ details → line items table → vendor list → deadline.
+
+---
+
+### 5.4 PROCUREMENT OFFICER — QUOTATION COMPARISON
+
+#### Layout: Full Width
+
+**Header Section:**
+```
+COMPARING QUOTATIONS
+RFQ #2847: Industrial Bearings (250 units)
+3 QUOTES RECEIVED | DEADLINE PASSED | SELECT A VENDOR TO PROCEED
+```
+
+**Comparison Table — Full Width:**
+
+Each vendor = one column. First column = row labels.
+
+```
+                    MEHTA IND.       SHARMA TRADERS    GLOBAL SUPPLIES
+────────────────────────────────────────────────────────────────────────
+Rating              ████░  4.2★      ███░░  3.1★       █████  4.8★ ✦
+Unit Price          ₹450             ₹380  ✦ LOWEST    ₹420
+Delivery            12 days          15 days           9 days  ✦ FASTEST
+GST Rate            18%              18%               18%
+Total Value         ₹1,12,500        ₹95,000  ✦        ₹1,05,000
+Payment Terms       30 days NET      15 days NET       45 days NET  ✦
+Past Orders         12               4                 28  ✦
+Disputes            0  ✦             1                 0  ✦
+Response Time       2 hours  ✦       8 hours           1 hour  ✦
+────────────────────────────────────────────────────────────────────────
+COMPOSITE SCORE     74 / 100         61 / 100          89 / 100  ← REC.
+```
+
+- `✦ BEST` tags mark the best value per row
+- Recommended column is highlighted
+
+**Decision Engine (below table):**
+
+Three sliders:
+```
+PRICE WEIGHT      [████████░░]  80%
+DELIVERY WEIGHT   [████░░░░░░]  40%
+RATING WEIGHT     [██████░░░░]  60%
+```
+
+Dragging any slider → composite scores recalculate with rolling number animation (requestAnimationFrame counter). Recommended column shifts dynamically.
+
+**Vendor Notes:**
+Collapsible section below each vendor column. Shows their submitted notes/remarks.
+
+**Action Buttons (bottom of each column):**
+```
+[VIEW FULL QUOTE]   [VIEW FULL QUOTE]   [✓ SELECT THIS VENDOR]
+```
+
+---
+
+### 5.5 PROCUREMENT OFFICER — PURCHASE ORDER
+
+#### Layout: Split Screen
+
+**Left Controls Panel:**
+- PO Number: `PO-2025-1203` — non-editable
+- Status tracker: `DRAFT → SENT → ACKNOWLEDGED → FULFILLED`
+  Active stage highlighted, completed stages marked done, future stages muted
+- Delivery address: select from saved addresses + `+ ADD NEW`
+- Special instructions: textarea
+- Expected delivery date (pre-filled from vendor quote)
+- `GENERATE PO →` button (full width)
+
+**Right — Live PO Document:**
+Updates as left panel changes.
+Document: Company header, vendor details, line items table, GST breakdown, totals, terms.
+
+**Action Buttons (always visible):**
+```
+[⬇ DOWNLOAD PDF]    [🖨 PRINT]    [GENERATE INVOICE →]
+```
+
+---
+
+### 5.6 PROCUREMENT OFFICER — INVOICE GENERATION
+
+#### Layout: Split Screen (same as PO)
+
+**Left Controls Panel:**
+- Invoice number: `INV-2025-089` — auto-generated
+- Invoice date: auto-set to today, editable
+- Payment due date: auto-calculated from payment terms
+- Tax toggle: `CGST + SGST` (intra-state) vs `IGST` (inter-state)
+- Additional charges: freight, handling (optional fields)
+- Notes to vendor: textarea
+
+**Right — Live Invoice Document:**
+Real GST-compliant tax invoice layout:
+```
+VENDORA / YOUR COMPANY NAME
+GSTIN: 27XXXXX
+
+                              TAX INVOICE
+                              INV-2025-089
+                              Date: Oct 12, 2025
+
+Bill To:
+Mehta Industries Pvt. Ltd.
+GSTIN: 27YYYYY
+
+ITEM              QTY    RATE      AMOUNT
+────────────────────────────────────────
+Industrial Bearings 250  ₹380     ₹95,000
+
+Subtotal:                         ₹95,000
+CGST 9%:                          ₹8,550
+SGST 9%:                          ₹8,550
+────────────────────────────────────────
+TOTAL:                           ₹1,12,100
+```
+
+**Action Buttons:**
+```
+[⬇ DOWNLOAD PDF]    [🖨 PRINT]    [✉ EMAIL TO VENDOR]
+```
+
+**Email Slide-Over:**
+Slides in from right:
+```
+TO:      mehta.industries@email.com  [editable]
+CC:      accounts@yourcompany.com   [editable]
+SUBJECT: Invoice INV-2025-089 — ₹1,12,100 [pre-filled]
+─────────────────────────────────────────────────────
+Dear Mehta Industries,
+Please find Invoice INV-2025-089 attached.
+Payment due: November 11, 2025.
+[PDF auto-attached]
+
+[SEND EMAIL →]
+```
+
+Success: checkmark animation + `INVOICE SENT SUCCESSFULLY` toast from top-right.
+
+---
+
+### 5.7 VENDOR — DASHBOARD
+
+#### Layout: Two-Column
+
+**Header (top of page):**
+```
+VENDORA
+Welcome back, Mehta Industries.
+[amber shield icon] Trust Score: 87/100
+```
+
+**Left Column — Open Invitations:**
+
+Header: `OPEN INVITATIONS` with count badge.
+
+Each RFQ card:
+```
+┌────────────────────────────────────────────┐
+│ RFQ #2847                  ⏰ 3 DAYS LEFT  │
+│ Industrial Bearings — 250 units            │
+│ From: ABC Manufacturing Co.                │
+│                                            │
+│ [VIEW DETAILS]       [SUBMIT QUOTE →]      │
+└────────────────────────────────────────────┘
+```
+
+Left border color system:
+- Amber = open, awaiting response
+- Blue = quote submitted, under review
+- Green = you won
+- Gray = closed / lost
+
+**Right Column — Activity & History:**
+
+*My Quote History (top half):*
+Timeline entries showing: RFQ name, outcome badge (WON/LOST/PENDING), value, date.
+
+*Negotiation Threads (bottom half):*
+Active negotiation threads listed as compact cards:
+```
+[MessageSquare icon] RFQ #2847 — Industrial Bearings
+3 unread messages · Last: "Can you revise delivery?"
+[OPEN THREAD →]
+```
+Unread count shown as badge.
+
+---
+
+### 5.8 VENDOR — QUOTE SUBMISSION
+
+#### Layout: Full Width, Single Column, Focused
+
+**Top — RFQ Brief (read only):**
+Clean display of what was requested: Item, qty, specs, deadline.
+Below: thin separator + `YOUR RESPONSE ↓`
+
+**Quote Form — One row per line item:**
+```
+ITEM: Industrial Bearings (250 units requested)
+─────────────────────────────────────────────────
+YOUR UNIT PRICE:   [₹ ________]
+YOUR TOTAL:        ₹ 0   ← auto-calculates as they type
+DELIVERY DAYS:     [____] days from PO date
+AVAILABILITY:      [IN STOCK ▼]
+```
+
+**Global Fields (below all items):**
+```
+VALID UNTIL:    [date picker]
+GST RATE:       [18% ▼]
+PAYMENT TERMS:  [30 days NET ▼]
+NOTES/REMARKS:  [textarea]
+```
+
+**Vendor Mood Indicator:**
+One-question tap (no typing):
+```
+HOW CONFIDENT ARE YOU ABOUT THIS QUOTE?
+[😰 Stretched]  [😐 Fair]  [😊 Comfortable]  [🔥 Very Competitive]
+```
+This data shows on the officer's comparison screen.
+
+**Live Quote Summary Card (auto-renders as fields are filled):**
+```
+┌──────────────────────────────────┐
+│  YOUR QUOTE SUMMARY              │
+│  ──────────────────────────────  │
+│  Subtotal:    ₹95,000           │
+│  GST (18%):   ₹17,100          │
+│  TOTAL:       ₹1,12,100        │
+│  Delivery:    12 days           │
+│  Confidence:  🔥 Very Competitive│
+└──────────────────────────────────┘
+```
+
+**Buttons:**
+```
+[SAVE AS DRAFT]     [SUBMIT QUOTE →]
+```
+
+**Post-Submit Confirmation Screen:**
+Full-screen takeover:
+```
+QUOTE SUBMITTED
+RFQ #2847 — ₹1,12,100
+
+SUBMITTED → UNDER REVIEW → DECISION PENDING → RESULT
+   ●              ○                ○               ○
+```
+Status dots: filled = done, empty = future.
+
+---
+
+### 5.9 VENDOR — NEGOTIATION THREAD
+
+*This is the standout feature.*
+
+#### Layout: Two-Panel
+
+**Left Panel — Thread List (30%):**
+
+Header: `NEGOTIATIONS`
+
+Each thread card:
+```
+┌────────────────────────────────────┐
+│ RFQ #2847                          │
+│ Industrial Bearings                │
+│ With: Ramesh Shah, Officer         │
+│ 3 unread · 2h ago                 │
+└────────────────────────────────────┘
+```
+
+**Right Panel — Active Thread (70%):**
+
+*Thread Header:*
+```
+RFQ #2847 — INDUSTRIAL BEARINGS
+With: Ramesh Shah, Procurement Officer
+Status: QUOTE SUBMITTED | [VIEW RFQ] [VIEW QUOTE]
+```
+Three action pills above the chat, always visible.
+
+*Message Area:*
+Chat-style messages, NOT WhatsApp-style bubble design. More like Linear/Notion comments:
+
+Officer messages:
+```
+RAMESH SHAH · Procurement Officer
+Oct 12, 2025 · 10:42 AM
+──────────────────────────────────────
+Can you revise the delivery timeline?
+We need this in 7 days, not 12.
+```
+
+Vendor messages (right-aligned):
+```
+                          MEHTA INDUSTRIES · Vendor
+                          Oct 12, 2025 · 11:15 AM
+          ────────────────────────────────────────────
+          We can do 8 days if the PO is issued by EOD.
+          Rush handling charges of ₹2,000 apply.
+```
+
+System messages (centered, muted):
+```
+─────── Quote revised to ₹97,000 · Oct 12 · 11:30 AM ───────
+─────── PO #1203 generated · Oct 13 · 9:00 AM ───────
+```
+
+*Message Input (bottom):*
+```
+[Message input — full width]    [SEND →]
+Placeholder: "Type a message..."
+```
+Enter to send. Shift+Enter for new line.
+
+*Audit Trail Note (below input):*
+```
+🔒 All messages are timestamped and audit-logged.
+```
+
+**Key behaviors:**
+- Supabase realtime: new messages appear instantly without refresh
+- Unread counts update in sidebar in real time
+- Thread is LOCKED after PO is issued — becomes read-only archive
+- Export button: `EXPORT THREAD AS PDF` — full conversation log for compliance
+
+---
+
+### 5.10 MANAGER / APPROVER — DASHBOARD
+
+#### Layout: Full Width
+
+**Urgency Banner (top, full width — shows if any pending approvals):**
+```
+⚡  3 APPROVALS WAITING — OLDEST IS 18 HOURS. REVIEW NOW →
+```
+Click → jumps to queue.
+
+**Below Banner — Split View:**
+
+Left 35% — Approval Queue:
+```
+● RFQ #2847 — ₹1,12,100    [18h pending]
+● RFQ #2851 — ₹45,000      [6h pending]
+● RFQ #2856 — ₹8,23,000    [1h pending]  HIGH VALUE ⚠
+```
+HIGH VALUE tag for anything > ₹5L.
+
+Right 65% — Approval Detail Card (see 5.11):
+Always showing the selected item. Switches instantly on left-panel click.
+
+**Below the split — Manager Analytics (three charts):**
+
+Chart 1 — Approval Velocity (line chart, Recharts):
+Average hours from submission to approval, last 30 days.
+Target line at 24h. If avg > 24h: `"You're averaging 31h. Target is 24h."`
+
+Chart 2 — Spend by Category (horizontal bar chart, Recharts):
+Each category = one horizontal bar, Space Mono values on right.
+
+Chart 3 — Vendor Concentration Risk:
+Horizontal bars showing % of spend per vendor.
+> 30% = warning tag. > 50% = alert tag.
+
+---
+
+### 5.11 MANAGER / APPROVER — APPROVAL DETAIL
+
+*Embedded in Dashboard right panel, or full screen on mobile.*
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│  RFQ #2847 — INDUSTRIAL BEARINGS                               │
+│  250 units  │  Requested by: Ramesh Shah                       │
+│                                                                │
+│  SELECTED VENDOR:  Global Supplies   █████ 4.8★               │
+│  QUOTED AMOUNT:    ₹1,12,100                                  │
+│  DELIVERY:         9 days from PO date                        │
+│  vs LOWEST QUOTE:  ₹95,000 (Sharma Traders)                   │
+│  PRICE PREMIUM:    +₹17,100 (+18%)                           │
+│                                                                │
+│  WHY NOT THE CHEAPEST? ↓                                       │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │ Sharma Traders: 3.1★ · 8h response · 1 dispute          │  │
+│  │ Global Supplies: 4.8★ · 1h response · 0 disputes        │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                │
+│  OFFICER NOTE:                                                 │
+│  "Global Supplies has never missed a deadline. Sharma          │
+│   caused a 2-week delay last quarter."                        │
+│                                                                │
+│  NEGOTIATION THREAD: [VIEW 4 MESSAGES →]                      │
+│  (link to the thread — manager can read the conversation)     │
+│                                                                │
+│  APPROVAL CHAIN:                                               │
+│  ✓ Ramesh Shah (Officer)     Submitted Oct 12                  │
+│  ⏳ Priya Mehta (You)         Pending                          │
+│  ○ Finance Head               Not yet                          │
+│                                                                │
+│  YOUR REMARKS (required for rejection):                        │
+│  [________________________________________________]           │
+│                                                                │
+│  [✗  REJECT]                       [✓  APPROVE  →]           │
+└────────────────────────────────────────────────────────────────┘
+```
+
+**Hold-to-Approve mechanic (for values > ₹1 lakh):**
+- Button starts filled
+- User holds mouse/finger down
+- Circular SVG ring animates around the button, fills in 1.5 seconds
+- On complete: triggers approval, button flashes green, success toast fires
+- If released early: ring resets, button wobbles (CSS shake animation)
+- Label during hold: `HOLD TO CONFIRM...`
+
+**Rejection flow:**
+- Click REJECT → remarks field becomes required (red outline if empty)
+- Cannot submit rejection without remarks
+- After rejection: red checkmark animation, officer gets instant notification with remarks
+
+**Manager can also:**
+- Click `VIEW 4 MESSAGES →` to read the negotiation thread (read-only for manager)
+- Manager sees the full conversation context before deciding
+
+---
+
+### 5.12 ADMIN — DASHBOARD
+
+#### Layout: Three-Column (same as officer)
+
+**System Health Strip (top, full width):**
+```
+[ TOTAL USERS: 12 ]  [ ACTIVE VENDORS: 34 ]  [ RFQs THIS MONTH: 23 ]
+[ TOTAL SPEND: ₹1.2CR ]  [ SAVINGS TOTAL: ₹8.2L ]
+```
+All numbers count up on load.
+
+**Center Canvas — Procurement Health Score:**
+
+Large circular gauge — centerpiece of admin dashboard:
+```
+         PROCUREMENT
+         HEALTH SCORE
+
+              87
+           ────────
+           HEALTHY
+```
+Ring fills to 87% (SVG circle with stroke-dashoffset animation on mount).
+
+Below the gauge, four sub-score bars:
+```
+RFQ COMPETITION RATE   ████████░░  82%   (% RFQs with 3+ quotes)
+APPROVAL SPEED         ███████░░░  74%   (avg approval < 24h)
+DELIVERY COMPLIANCE    █████████░  91%   (POs delivered on time)
+VENDOR RESPONSIVENESS  ████████░░  85%   (vendors responding)
+```
+
+One sentence: `"Your procurement is healthy. Approval speed needs attention."`
+
+**Below Health Score — Three Panels:**
+
+Panel 1 — User Management:
+Table: Name | Role (colored badge) | Last Login | Status | Actions
+Actions: `EDIT ROLE` / `DEACTIVATE`
+
+Panel 2 — Vendor Registry:
+All vendors. Performance ring per row.
+Status filter chips: `ALL | ACTIVE | PENDING | BLACKLISTED`
+Click row → vendor profile slide-over.
+
+Panel 3 — System Audit Log:
+Every action, timestamped, user, action type.
+Filter by: user / action type / date range.
+
+---
+
+### 5.13 ADMIN — REPORTS & ANALYTICS
+
+Full-width canvas, takes over center + right columns.
+
+**Export button (top right):** `EXPORT ALL REPORTS →`
+
+**Section 1 — Savings Spotlight (full width):**
+```
+VENDORA HAS SAVED YOUR ORGANIZATION
+₹8,23,450 THIS YEAR
+through competitive procurement
+```
+Below: monthly savings line chart (Recharts). Each data point shows month + savings amount.
+
+**Section 2 — Monthly Spending Heatmap:**
+12 columns (months) × 5 rows (categories).
+Cell color intensity based on spend.
+Hover: tooltip with exact amount.
+Caption: `Seasonality in your procurement spending`
+
+**Section 3 — Vendor Performance Leaderboard:**
+Two columns: TOP 5 | BOTTOM 5
+Each entry: Rank number | Vendor name | Composite score | Total orders | Key stat
+
+**Section 4 — Procurement Funnel:**
+```
+RFQs CREATED       ████████████████████  23
+QUOTES RECEIVED    ████████████████░░░░  19   (83%)
+COMPARISONS DONE   ██████████████░░░░░░  17   (74%)
+APPROVALS GRANTED  ████████████░░░░░░░░  15   (65%)
+POs ISSUED         ███████████░░░░░░░░░  14   (61%)
+INVOICES DONE      █████████░░░░░░░░░░░  11   (48%)
+```
+Each bar fills left-to-right on scroll into view. Drop-off annotations on the right.
+Auto-insight below: `⚠ Invoicing stage has highest drop-off (13%). Investigate delays.`
+
+---
+
+### 5.14 SAVINGS TRACKER — GLOBAL FEATURE
+
+*Appears on: Officer Dashboard (right panel), Admin Dashboard, Admin Reports*
+
+#### Logic
+```
+For each completed procurement cycle:
+  savings = max(all quotes received) − actual PO value
+
+Annual total = sum of all savings across all POs this year
+Monthly trend = savings per month for last 12 months
+```
+
+#### Savings Widget Component (SavingsWidget.tsx)
+
+Used in Officer right panel (compact) and Admin reports (full):
+
+**Compact version (Officer Dashboard right panel):**
+```
+SAVINGS THIS YEAR
+──────────────────
+₹8,23,450
++₹45,000 from last PO
+
+[VIEW BREAKDOWN →]
+```
+Number animates (counts up) when widget enters view.
+
+**Full version (Admin Reports):**
+```
+VENDORA HAS SAVED YOUR ORGANIZATION
+
+₹8,23,450 THIS YEAR
+
+through competitive procurement
+
+
+[Monthly savings chart — line chart, Recharts]
+[Oct  Nov  Dec  Jan  Feb  Mar ...]
+[₹45K ₹78K ₹1.2L ₹34K ₹92K ₹1.1L ...]
+```
+
+**Per-PO Breakdown Table:**
+```
+PO NUMBER    ITEM               HIGHEST QUOTE   PO VALUE    SAVED
+───────────────────────────────────────────────────────────────────
+PO-2025-1203 Industrial Bearings  ₹1,12,500     ₹95,000    ₹17,500
+PO-2025-1198 Office Supplies      ₹32,000       ₹26,000    ₹6,000
+PO-2025-1185 Safety Equipment     ₹1,85,000     ₹1,45,000  ₹40,000
+```
+Table rows animate in staggered on mount.
+
+When the page loads, the total number counts up from 0 to `₹8,23,450` over 2 seconds using requestAnimationFrame.
+
+---
+
+### 5.15 NEGOTIATION THREAD — GLOBAL FEATURE
+
+*Appears on: Vendor pages (primary), Officer pages (secondary), Manager (read-only)*
+
+#### Data Model (frontend state)
+```typescript
+interface Message {
+  id: string;
+  rfq_id: string;
+  sender_id: string;
+  sender_name: string;
+  sender_role: 'officer' | 'vendor' | 'system';
+  content: string;
+  timestamp: string;
+  is_read: boolean;
+}
+
+interface Thread {
+  id: string;
+  rfq_id: string;
+  rfq_title: string;
+  participants: string[];
+  messages: Message[];
+  is_locked: boolean; // true after PO generated
+  unread_count: number;
+}
+```
+
+#### Thread Features
+
+**Real-time messaging:** Supabase realtime subscription on the messages table. New messages appear instantly for both parties.
+
+**System messages (auto-generated):**
+These appear automatically as centered gray messages when key events occur:
+- `"Quote submitted · ₹1,12,100 · Oct 12 · 10:30 AM"`
+- `"Quote revised to ₹1,05,000 · Oct 12 · 2:15 PM"`
+- `"Sent for approval · Oct 13 · 9:00 AM"`
+- `"PO #1203 generated · Oct 13 · 11:30 AM"`
+- `"🔒 Thread locked — PO issued"`
+
+System messages are dimmed and centered. They're the audit trail made visible.
+
+**Thread Lock:**
+After PO is issued, the message input is replaced with:
+```
+┌─────────────────────────────────────────────┐
+│  🔒 THREAD LOCKED                           │
+│  PO #1203 issued on Oct 13, 2025           │
+│  This thread is now read-only.             │
+│                                             │
+│  [EXPORT CONVERSATION →]                    │
+└─────────────────────────────────────────────┘
+```
+
+**Export:** Generates a clean PDF of the full conversation with timestamps. Used for audits and dispute resolution.
+
+**Unread Badge:** Shows on nav rail icon (MessageSquare). Updates in real time.
+
+**Manager Read-Only View:**
+Manager can click `VIEW THREAD` from the approval card. Opens the thread in a modal, read-only. No input field. Just the full conversation + system events. This gives the approver full context — they see negotiation history before approving.
+
+**Why this wins:**
+1. It eliminates WhatsApp from procurement — which is the #1 unprofessional behavior in Indian SME procurement
+2. Every message is automatically audited — which compliance teams demand
+3. System events make the audit trail readable as a story, not just a log
+4. Thread lock after PO prevents post-approval renegotiation
+
+---
+
+## 6. SHARED COMPONENTS
+
+### StatusBadge.tsx
+```typescript
+// Variants: 'pending' | 'active' | 'approved' | 'rejected' | 'completed' | 'draft'
+// Pending/Active: pulsing dot animation (2s ease-in-out infinite)
+// Completed: static green
+// Rejected: static red
+```
+
+### KPICard.tsx
+```typescript
+// Props: label, value, subInfo, trend ('up'|'down'|null), urgency (boolean)
+// Value counts up from 0 on mount (useEffect with requestAnimationFrame)
+// Amber progress underline (width = % of monthly target)
+```
+
+### LiveActivityFeed.tsx
+```typescript
+// Supabase realtime subscription
+// New events: AnimatePresence slide-in from top
+// Color-coded dots per event type
+// Auto-scrolls to new events
+```
+
+### SavingsWidget.tsx
+```typescript
+// Props: compact (boolean)
+// Animated counter on mount
+// Breakdown table in full mode
+```
+
+### NegotiationBadge.tsx
+```typescript
+// Shows unread count on nav
+// Updates via Supabase realtime
+```
+
+---
+
+## 7. NOTIFICATION SYSTEM
+
+### Toast Notifications (react-hot-toast, custom styled)
+All toasts are directional — they tell you what happened AND what comes next.
+
+```
+// Quote received
+"↓ NEW QUOTE — RFQ #2847 · Mehta Industries · ₹95,000"
+
+// Approval cleared
+"✓ APPROVED — PO #1203 being generated now"
+
+// Invoice sent
+"✉ INVOICE SENT — INV-089 delivered to Mehta Industries"
+
+// New message
+"💬 NEW MESSAGE — RFQ #2847 · Ramesh Shah"
+```
+
+### Supabase Realtime Subscriptions
+```typescript
+// Subscribe to:
+// - quotations table (new quotes → officer gets toast)
+// - approvals table (status change → officer gets toast)
+// - negotiation_messages table (new message → both parties get toast)
+// - rfqs table (status change → vendor gets toast)
+```
+
+---
+
+## 8. ROUTING STRUCTURE
+
+```typescript
+// App.tsx
+<Routes>
+  <Route path="/" element={<Navigate to="/login" />} />
+  <Route path="/login" element={<Login />} />
+
+  {/* Procurement Officer */}
+  <Route path="/officer" element={<OfficerLayout />}>
+    <Route path="dashboard" element={<OfficerDashboard />} />
+    <Route path="rfq/create" element={<RFQCreate />} />
+    <Route path="rfq/:id" element={<RFQDetail />} />
+    <Route path="compare/:rfqId" element={<QuotationComparison />} />
+    <Route path="purchase-orders" element={<PurchaseOrders />} />
+    <Route path="purchase-orders/:id" element={<PurchaseOrderDetail />} />
+    <Route path="invoices" element={<Invoices />} />
+    <Route path="invoices/:id" element={<InvoiceDetail />} />
+    <Route path="negotiations" element={<Negotiations />} />
+    <Route path="negotiations/:threadId" element={<NegotiationThread />} />
+  </Route>
+
+  {/* Vendor */}
+  <Route path="/vendor" element={<VendorLayout />}>
+    <Route path="dashboard" element={<VendorDashboard />} />
+    <Route path="rfq/:id" element={<VendorRFQDetail />} />
+    <Route path="quote/:rfqId" element={<QuoteSubmit />} />
+    <Route path="negotiations" element={<VendorNegotiations />} />
+    <Route path="negotiations/:threadId" element={<NegotiationThread />} />
+    <Route path="orders" element={<VendorOrders />} />
+  </Route>
+
+  {/* Manager */}
+  <Route path="/manager" element={<ManagerLayout />}>
+    <Route path="dashboard" element={<ManagerDashboard />} />
+    <Route path="approval/:id" element={<ApprovalDetail />} />
+  </Route>
+
+  {/* Admin */}
+  <Route path="/admin" element={<AdminLayout />}>
+    <Route path="dashboard" element={<AdminDashboard />} />
+    <Route path="reports" element={<Reports />} />
+    <Route path="vendors" element={<VendorManagement />} />
+    <Route path="users" element={<UserManagement />} />
+  </Route>
+</Routes>
+```
+
+---
+
+## SUMMARY — WHAT MAKES VENDORA WIN
+
+| Feature | Why Judges Stop |
+|---|---|
+| Video background login + role tiles | First 10 seconds sets the tone |
+| Procurement Pipeline kanban | No other ERP visualizes workflow this way |
+| Bloomberg-style comparison table | Looks like serious financial software |
+| Weighted Decision Engine sliders | Feels intelligent, not just informational |
+| Hold-to-Approve mechanic | Shows you understand real-world risk |
+| Negotiation Thread with audit trail | Replaces the #1 pain point — WhatsApp |
+| System messages in thread | Makes audit log human-readable |
+| Savings Tracker with counting animation | Answers "what's the ROI?" in 2 seconds |
+| Procurement Health Score gauge | No other team will think of this |
+| Live Activity Feed (Supabase realtime) | Proof it's a live system, not a mockup |
+
+---
+
+*VENDORA Frontend PRD v1.0*
